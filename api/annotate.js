@@ -233,7 +233,7 @@ function trimAnnotation(annotation) {
   return annotation.trim().replace(/"/g, '\\"').replace(/\\/g, "\\\\");
 }
 
-export default async (req) => {
+export default async (req, res) => {
   console.log("STARTING ANNOTATION");
   let body;
   try {
@@ -250,11 +250,13 @@ export default async (req) => {
 
   const omnivore = new Omnivore();
   const article = await omnivore.getArticle(articleId);
+  res.status(200).send("Article content received.");
 
   console.log(`Article content received: ${article}`);
 
   const ai = new AI();
-  const articleAnnotation = await ai.getBestCompletionOutOf(process.env["OPENAI_PROMPT"], [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()], article);;
+  const articleAnnotation = await ai.getBestCompletionOutOf(process.env["OPENAI_PROMPT"], [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()], article);
+  res.status(200).send("Article annotation received.");
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log(`Article annotation added: ${response}`);
 
