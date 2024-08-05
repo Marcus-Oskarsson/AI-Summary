@@ -54,10 +54,10 @@ class AI {
     const completionContents = await Promise.all(
       completions.map(() => this.getCompletion(prompt, articleContent))
     );
-    console.log(`Array Completions received: ${completionContents.join("\n")}`);
+    console.log(`Array Completions received: ${completionContents.join("\n\n\n")}`);
   
     return await this.getCompletion(
-      "Review the following completions and select and refine the best one based upon the clarity, Obsidian compatibility, and actionability. Dont add new headings or any text marking it's a refined version of the completion.",
+      process.env["OPENAI_REFINEMENT_PROMT"],
       completionContents.join("\n")
     );
   }
@@ -254,7 +254,7 @@ export default async (req) => {
   console.log(`Article content received: ${article}`);
 
   const ai = new AI();
-  const articleAnnotation = await ai.getBestCompletionOutOf(process.env["OPENAI_PROMPT"], [...Array(3).keys()], article);;
+  const articleAnnotation = await ai.getBestCompletionOutOf(process.env["OPENAI_PROMPT"], [...Array(process.env['OPENAI_REFINEMENT_ROUNDS'] || 1).keys()], article);;
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log(`Article annotation added: ${response}`);
 
