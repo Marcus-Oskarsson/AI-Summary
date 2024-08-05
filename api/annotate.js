@@ -54,7 +54,7 @@ class AI {
     const completionContents = await Promise.all(
       completions.map(() => this.getCompletion(prompt, articleContent))
     );
-    console.log(`Array Completions received: ${completionContents.join("\n\n\n")}`);
+    console.log(`Array Completions received: ${completionContents.join("\n\n\n next article:")}`);
   
     return await this.getCompletion(
       process.env["OPENAI_REFINEMENT_PROMT"],
