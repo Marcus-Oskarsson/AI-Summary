@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "annotate.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write ."
   },
   "author": "Marcus Oskarsson",
   "license": "MIT",
@@ -12,5 +13,8 @@
   "dependencies": {
     "openai": "^4.54.0",
     "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
   }
 }

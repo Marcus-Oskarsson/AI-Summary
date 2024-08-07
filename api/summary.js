@@ -6,6 +6,9 @@ export const config = {
 };
 
 const OMNIVORE_URL = 'https://api-prod.omnivore.app/api/graphql';
+const PROMPT = `Summarize the following article in 500 words or less, using [[Obsidian links]] for all concepts and names. Format every mention of a book as [[<bookTitle> av <author> | <bookTitle>]] - example: [[Bilbo av Tolkien | Bilbo]]. Write the summary in Obsidian Markdown and in the third person, e.g., "the author writes," "In the article...". Don't add a header for the summary.`;
+
+const REFINEMENT_PROMPT = `Review the following completions. Select and refine the best one for clarity and Obsidian compatibility. Do not add new headings or indicate it has been refined, and do not shorten or remove the summary - just fix errors and make it more compatible with Obsidian. Make sure all names and concepts are marked up as Obsidian links and also make sure all mentions of books are formated like this:  [[<bookTitle> av <author> | <bookTitle>]] - example: [[Bilbo av Tolkien | Bilbo]].`;
 
 class AI {
   constructor(model = null, settings = null) {
@@ -71,7 +74,7 @@ class AI {
     );
 
     return await this.getCompletion(
-      process.env['OPENAI_REFINEMENT_PROMT'],
+      REFINEMENT_PROMPT,
       completionContents.join('\n'),
     );
   }
@@ -258,7 +261,7 @@ function trimAnnotation(annotation) {
 }
 
 export default async (req) => {
-  console.log('STARTING ANNOTATION');
+  console.log('STARTING SUMMARY ANNOTATION');
   let body;
   try {
     body = await req.json();
@@ -280,7 +283,7 @@ export default async (req) => {
 
   const ai = new AI();
   const articleAnnotation = await ai.getBestCompletionOutOf(
-    process.env['OPENAI_PROMPT'],
+    PROMPT,
     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
     article,
   );

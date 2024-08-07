@@ -6,6 +6,10 @@ export const config = {
 };
 
 const OMNIVORE_URL = 'https://api-prod.omnivore.app/api/graphql';
+const PROMPT =
+  'Write spaced repetition prompts for the article. Include the question and answer. Format the question as a question and the answer as a statement. Format like this: <question>::<answer>, For example: What is the capital of France?::The capital of France is Paris.';
+const REFINEMENT_PROMPT =
+  'Make sure the prompts are clear and concise. Do not add new headings or indicate it has been refined, and do not shorten or remove text - just fix errors and make it more compatible with Obsidian. Make sure all propmts are formatted as <question>::<answer>. For example: What is the capital of France?::The capital of France is Paris.';
 
 class AI {
   constructor(model = null, settings = null) {
@@ -71,7 +75,7 @@ class AI {
     );
 
     return await this.getCompletion(
-      process.env['OPENAI_REFINEMENT_PROMT'],
+      REFINEMENT_PROMPT,
       completionContents.join('\n'),
     );
   }
@@ -258,7 +262,7 @@ function trimAnnotation(annotation) {
 }
 
 export default async (req) => {
-  console.log('STARTING ANNOTATION');
+  console.log('STARTING REPETITION ANNOTATION');
   let body;
   try {
     body = await req.json();
@@ -280,7 +284,7 @@ export default async (req) => {
 
   const ai = new AI();
   const articleAnnotation = await ai.getBestCompletionOutOf(
-    process.env['OPENAI_PROMPT'],
+    PROMPT,
     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
     article,
   );

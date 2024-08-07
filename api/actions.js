@@ -6,6 +6,9 @@ export const config = {
 };
 
 const OMNIVORE_URL = 'https://api-prod.omnivore.app/api/graphql';
+const PROMPT = `List actionable tasks based on the article's lessons or explain how the content can impact my life, productivity, or learning if tasks are not applicable.`;
+
+const REFINEMENT_PROMPT = `Review the following completions. Select and refine the best one for clarity and Obsidian compatibility. Do not add new headings or indicate it has been refined, and do not shorten or remove text - just fix errors and make it more compatible with Obsidian.`;
 
 class AI {
   constructor(model = null, settings = null) {
@@ -71,7 +74,7 @@ class AI {
     );
 
     return await this.getCompletion(
-      process.env['OPENAI_REFINEMENT_PROMT'],
+      REFINEMENT_PROMPT,
       completionContents.join('\n'),
     );
   }
@@ -258,7 +261,7 @@ function trimAnnotation(annotation) {
 }
 
 export default async (req) => {
-  console.log('STARTING ANNOTATION');
+  console.log('STARTING ACTION ANNOTATION');
   let body;
   try {
     body = await req.json();
@@ -279,11 +282,13 @@ export default async (req) => {
   console.log(`Article content received: ${article}`);
 
   const ai = new AI();
-  const articleAnnotation = await ai.getBestCompletionOutOf(
-    process.env['OPENAI_PROMPT'],
-    [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
-    article,
-  );
+  const articleAnnotation =
+    '\n##Actions\n' +
+    (await ai.getBestCompletionOutOf(
+      PROMPT,
+      [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
+      article,
+    ));
   new Response(`Article annotation received:`);
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log(`Article annotation added: ${response}`);
