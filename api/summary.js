@@ -199,6 +199,7 @@ class Omnivore {
         body: JSON.stringify(query),
         redirect: 'follow',
       });
+      console.log('RESPONSE: ', response);
 
       if (!response.ok) {
         console.error(`HTTP error! status: ${response.status}`);
@@ -266,6 +267,5 @@ export default async (req, res) => {
 
   // Lägg till en ny kommentar till artikeln
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
-  console.log('RESPONSE: ', response);
   return new Response(JSON.stringify(response), { status: 200 });
 };
