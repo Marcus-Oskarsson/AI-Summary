@@ -283,7 +283,6 @@ export default async (req) => {
       [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
       article,
     ));
-  new Response(`Article annotation received:`);
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
 
   fetch('https://ai-summary-theta.vercel.app/api/repetition', {

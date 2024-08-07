@@ -289,7 +289,7 @@ export default async (req, res) => {
   );
 
   // Starta nästa funktion
-  fetch('https://ai-summary-theta.vercel.app/api/action', {
+  fetch('https://ai-summary-theta.vercel.app/api/actions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
