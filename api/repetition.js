@@ -268,6 +268,7 @@ export default async (req) => {
   articleAnnotation +=
     '\n##Spaced repetition\n' + (await ai.getCompletion(PROMPT, article));
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
+  console.log("articleAnnotation:\n", articleAnnotation);
   console.log('RESPONSE: ', response);
 
   return;

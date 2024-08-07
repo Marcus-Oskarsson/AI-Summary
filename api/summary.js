@@ -260,6 +260,6 @@ export default async (req, res) => {
 
   // Lägg till en ny kommentar till artikeln
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
-  console.log('RESPONSE: ', response);
+  console.log('RESPONSE: ', articleAnnotation);
   return;
 };
