@@ -21,11 +21,8 @@ class AI {
   }
 
   async getCompletion(prompt, articleContent) {
-    console.log(`Getting completion for prompt: ${prompt}`);
     if (!prompt || !articleContent) {
-      return new Response('Prompt and article content are required.', {
-        status: 400,
-      });
+      console.error('Prompt and article content are required.');
     }
 
     try {
@@ -47,30 +44,19 @@ class AI {
           `No completion returned from OpenAI for prompt "${prompt}"`,
         );
       }
-      console.log(
-        `Completion received: ${trimAnnotation(completion.choices[0].message.content)}`,
-      );
       return trimAnnotation(completion.choices[0].message.content);
     } catch (error) {
       console.error(`Error fetching completion from OpenAI: ${error.message}`);
-      return new Response(
-        `Error fetching completion from OpenAI: ${error.message}`,
-        { status: 500 },
-      );
     }
   }
 
   async getBestCompletionOutOf(prompt, completions, articleContent) {
-    console.log(`Getting best completion for prompt: ${prompt}`);
     if (!prompt || !completions || completions.length <= 0 || !articleContent) {
       throw new Error('Prompt, completions, and article content are required.');
     }
 
     const completionContents = await Promise.all(
       completions.map(() => this.getCompletion(prompt, articleContent)),
-    );
-    console.log(
-      `Array Completions received: ${completionContents.join('\n\n\n next article:')}`,
     );
 
     return await this.getCompletion(
@@ -154,7 +140,6 @@ class Omnivore {
 
   async getArticle(articleId, attempts = 0) {
     const query = this.buildGetQuery(articleId);
-    console.log('GET ARTICLE QUERY: ', query);
 
     try {
       const response = await fetch(OMNIVORE_URL, {
@@ -164,14 +149,11 @@ class Omnivore {
         redirect: 'follow',
       });
 
-      console.log('RESPONSE: ', response);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('DATA: ', data);
       if (data.errors) {
         throw new Error(
           `GraphQL error: ${data.errors.map((e) => e.message).join(', ')}`,
@@ -180,7 +162,7 @@ class Omnivore {
 
       if (!data?.data?.article?.article?.content && attempts < 3) {
         const delay = Math.pow(2, attempts) * 1000;
-        console.log(`No response, retrying... Attempt ${attempts + 1}`);
+        console.error(`No response, retrying... Attempt ${attempts + 1}`);
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(this.getArticle(articleId, attempts + 1));
@@ -188,21 +170,13 @@ class Omnivore {
         });
       }
 
-      console.log('ARTICLE CONTENT: ', data.data.article.article.content);
       return data.data.article.article.content;
     } catch (error) {
       console.error(`Error fetching article from Omnivore: ${error.message}`);
-      return new Response(
-        `Error fetching article from Omnivore: ${error.message}`,
-        { status: 500 },
-      );
     }
   }
 
   async addAnnotation(articleId, annotation) {
-    console.log(
-      `Adding annotation to article (ID: ${articleId}): ${annotation}`,
-    );
     const id = uuidv4();
     const query = {
       query: this.buildPostQuery(),
@@ -216,7 +190,6 @@ class Omnivore {
         },
       },
     };
-    console.log('ADD ANNOTATION QUERY: ', query);
 
     try {
       const response = await fetch(OMNIVORE_URL, {
@@ -232,7 +205,6 @@ class Omnivore {
       }
 
       const data = await response.json();
-      console.log('DATA: ', data);
       if (data.errors) {
         console.error(
           `GraphQL error: ${data.errors.map((e) => e.message).join(', ')}`,
@@ -242,15 +214,10 @@ class Omnivore {
         );
       }
 
-      console.log('ANNOTATION ADDED: ', data.data.createHighlight);
       return data.data.createHighlight;
     } catch (error) {
       console.error(
         `Error adding annotation to Omnivore article (ID: ${articleId}): ${error.message}`,
-      );
-      return new Response(
-        `Error adding annotation to Omnivore article (ID: ${articleId}): ${error.message}`,
-        { status: 500 },
       );
     }
   }
@@ -267,7 +234,6 @@ export default async (req) => {
     body = await req.json();
   } catch (e) {
     console.error(`No payload found: ${e.message}`);
-    return new Response('No payload found.', { status: 400 });
   }
 
   const { articleId } = body;
@@ -298,4 +264,7 @@ export default async (req) => {
       articleAnnotation,
     }),
   });
+
+  console.log('RESPONSE: ', response);
+  return;
 };
