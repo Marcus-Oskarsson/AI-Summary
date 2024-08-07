@@ -249,7 +249,7 @@ export default async (req, res) => {
 
   const articleAnnotation = 'En summering av artikeln';
 
-  const response = await omnivore.addAnnotation(articleId, articleAnnotation, id);
+  // const response = await omnivore.addAnnotation(articleId, articleAnnotation, id);
   // Starta nästa funktion
   await fetch('https://ai-summary-theta.vercel.app/api/actions', {
     method: 'POST',
@@ -259,7 +259,7 @@ export default async (req, res) => {
     body: JSON.stringify({
       articleId,
       article,
-      articleAnnotation: '',
+      articleAnnotation,
       id,
     }),
   });

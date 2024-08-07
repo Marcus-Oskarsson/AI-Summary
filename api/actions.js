@@ -249,11 +249,11 @@ export default async (req) => {
   //   '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
 
-  const response = await omnivore.addAnnotation(
-    articleId,
-    'En Action till artikeln',
-    id
-  );
+  // const response = await omnivore.addAnnotation(
+  //   articleId,
+  //   'En Action till artikeln',
+  //   id
+  // );
   await fetch('https://ai-summary-theta.vercel.app/api/repetition', {
     method: 'POST',
     headers: {
@@ -262,7 +262,7 @@ export default async (req) => {
     body: JSON.stringify({
       articleId,
       article,
-      articleAnnotation: '',
+      articleAnnotation: articleAnnotation + "\n Actions för artikeln",
       id
     }),
   });
