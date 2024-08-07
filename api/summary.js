@@ -282,7 +282,7 @@ export default async (req, res) => {
   console.log(`Article content received: ${article}`);
 
   const ai = new AI();
-  const articleAnnotation = await ai.getBestCompletionOutOf(
+  let articleAnnotation = await ai.getBestCompletionOutOf(
     PROMPT,
     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
     article,

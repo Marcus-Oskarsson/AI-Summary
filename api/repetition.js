@@ -273,7 +273,7 @@ export default async (req) => {
 
   const { articleId } = body;
   const { article } = body;
-  const { articleAnnotation } = body;
+  let { articleAnnotation } = body;
 
   const omnivore = new Omnivore();
   const ai = new AI();
