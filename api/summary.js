@@ -239,6 +239,7 @@ export default async (req, res) => {
   const { page: pageCreated } = body;
   const articleId = pageCreated.id;
   const id = uuidv4();
+  console.log("ID: ", id);
 
   const omnivore = new Omnivore();
   const article = await omnivore.getArticle(articleId);

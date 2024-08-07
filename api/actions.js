@@ -240,6 +240,8 @@ export default async (req) => {
   const { article } = body;
   let { articleAnnotation } = body;
   const { id } = body;
+  console.log("ID: ", id);
+
 
   const omnivore = new Omnivore();
   const ai = new AI();
