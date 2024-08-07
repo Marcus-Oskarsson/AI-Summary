@@ -246,7 +246,7 @@ export default async (req, res) => {
   let articleAnnotation = await ai.getCompletion(PROMPT, article);
 
   // Starta nästa funktion
-  fetch('https://ai-summary-theta.vercel.app/api/actions', {
+  await fetch('https://ai-summary-theta.vercel.app/api/actions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
