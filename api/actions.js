@@ -240,19 +240,16 @@ export default async (req) => {
   const { article } = body;
   let { articleAnnotation } = body;
 
-  // const omnivore = new Omnivore();
+  const omnivore = new Omnivore();
   const ai = new AI();
   // articleAnnotation +=
-  //   '\n##Actions\n' +
-  //   (await ai.getBestCompletionOutOf(
-  //     PROMPT,
-  //     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
-  //     article,
-  //   ));
-  articleAnnotation +=
-    '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
+  //   '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
 
+  const response = await omnivore.addAnnotation(
+    articleId,
+    'En Action till artikeln',
+  );
   await fetch('https://ai-summary-theta.vercel.app/api/repetition', {
     method: 'POST',
     headers: {
@@ -261,10 +258,9 @@ export default async (req) => {
     body: JSON.stringify({
       articleId,
       article,
-      articleAnnotation,
+      articleAnnotation: '',
     }),
   });
 
-  console.log('RESPONSE: ', articleAnnotation);
-  return;
+  return new Response(JSON.stringify(response), { status: 200 });
 };

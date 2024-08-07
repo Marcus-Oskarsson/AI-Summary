@@ -243,8 +243,11 @@ export default async (req, res) => {
   const article = await omnivore.getArticle(articleId);
 
   const ai = new AI();
-  let articleAnnotation = await ai.getCompletion(PROMPT, article);
+  // let articleAnnotation = await ai.getCompletion(PROMPT, article);
 
+  const articleAnnotation = 'En summering av artikeln';
+
+  const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   // Starta nästa funktion
   await fetch('https://ai-summary-theta.vercel.app/api/actions', {
     method: 'POST',
@@ -254,12 +257,12 @@ export default async (req, res) => {
     body: JSON.stringify({
       articleId,
       article,
-      articleAnnotation,
+      articleAnnotation: '',
     }),
   });
 
   // Lägg till en ny kommentar till artikeln
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log('RESPONSE: ', articleAnnotation);
-  return;
+  return new Response(JSON.stringify(response), { status: 200 });
 };
