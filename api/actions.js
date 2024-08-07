@@ -276,13 +276,15 @@ export default async (req) => {
 
   const omnivore = new Omnivore();
   const ai = new AI();
+  // articleAnnotation +=
+  //   '\n##Actions\n' +
+  //   (await ai.getBestCompletionOutOf(
+  //     PROMPT,
+  //     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
+  //     article,
+  //   ));
   articleAnnotation +=
-    '\n##Actions\n' +
-    (await ai.getBestCompletionOutOf(
-      PROMPT,
-      [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
-      article,
-    ));
+    '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
 
   fetch('https://ai-summary-theta.vercel.app/api/repetition', {

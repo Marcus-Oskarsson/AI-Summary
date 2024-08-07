@@ -282,11 +282,7 @@ export default async (req, res) => {
   console.log(`Article content received: ${article}`);
 
   const ai = new AI();
-  let articleAnnotation = await ai.getBestCompletionOutOf(
-    PROMPT,
-    [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
-    article,
-  );
+  let articleAnnotation = await ai.getCompletion(PROMPT, article);
 
   // Starta nästa funktion
   fetch('https://ai-summary-theta.vercel.app/api/actions', {

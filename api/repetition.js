@@ -277,13 +277,15 @@ export default async (req) => {
 
   const omnivore = new Omnivore();
   const ai = new AI();
+  // articleAnnotation +=
+  //   '\n##Spaced repetition\n' +
+  //   (await ai.getBestCompletionOutOf(
+  //     PROMPT,
+  //     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
+  //     article,
+  //   ));
   articleAnnotation +=
-    '\n##Spaced repetition\n' +
-    (await ai.getBestCompletionOutOf(
-      PROMPT,
-      [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
-      article,
-    ));
+    '\n##Spaced repetition\n' + (await ai.getCompletion(PROMPT, article));
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log(`Article annotation added: ${response}`);
 
