@@ -272,10 +272,11 @@ export default async (req) => {
 
   const { articleId } = body;
   const { article } = body;
+  const { articleAnnotation } = body;
 
   const omnivore = new Omnivore();
   const ai = new AI();
-  const articleAnnotation =
+  articleAnnotation +=
     '\n##Actions\n' +
     (await ai.getBestCompletionOutOf(
       PROMPT,
@@ -284,7 +285,6 @@ export default async (req) => {
     ));
   new Response(`Article annotation received:`);
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
-  console.log(`Article annotation added: ${response}`);
 
   fetch('https://ai-summary-theta.vercel.app/api/repetition', {
     method: 'POST',
@@ -294,6 +294,7 @@ export default async (req) => {
     body: JSON.stringify({
       articleId,
       article,
+      articleAnnotation,
     }),
   });
 };

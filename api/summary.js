@@ -297,11 +297,12 @@ export default async (req, res) => {
     body: JSON.stringify({
       articleId,
       article,
+      articleAnnotation,
     }),
   });
 
   // Lägg till en ny kommentar till artikeln
-  const response = await omnivore.addAnnotation(articleId, articleAnnotation);
+  // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
 
   return new Response(`Article annotation added.`);
 };
