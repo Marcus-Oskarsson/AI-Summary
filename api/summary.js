@@ -260,7 +260,7 @@ function trimAnnotation(annotation) {
   return annotation.trim().replace(/"/g, '\\"').replace(/\\/g, '\\\\');
 }
 
-export default async (req) => {
+export default async (req, res) => {
   console.log('STARTING SUMMARY ANNOTATION');
   let body;
   try {
@@ -287,9 +287,21 @@ export default async (req) => {
     [...Array(Number(process.env['OPENAI_REFINEMENT_ROUNDS']) || 1).keys()],
     article,
   );
-  new Response(`Article annotation received:`);
+
+  // Starta nästa funktion
+  fetch('https://ai-summary-theta.vercel.app/api/action', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      articleId,
+      article,
+    }),
+  });
+
+  // Lägg till en ny kommentar till artikeln
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
-  console.log(`Article annotation added: ${response}`);
 
   return new Response(`Article annotation added.`);
 };

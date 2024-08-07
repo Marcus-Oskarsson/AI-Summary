@@ -270,17 +270,10 @@ export default async (req) => {
     return new Response('No payload found.', { status: 400 });
   }
 
-  const { page: pageCreated } = body;
-  const articleId = pageCreated.id;
-
-  console.log(`Article ID: ${articleId}`);
+  const { articleId } = body;
+  const { article } = body;
 
   const omnivore = new Omnivore();
-  const article = await omnivore.getArticle(articleId);
-  new Response(`Article content received:`);
-
-  console.log(`Article content received: ${article}`);
-
   const ai = new AI();
   const articleAnnotation =
     '\n##Actions\n' +
@@ -293,5 +286,14 @@ export default async (req) => {
   const response = await omnivore.addAnnotation(articleId, articleAnnotation);
   console.log(`Article annotation added: ${response}`);
 
-  return new Response(`Article annotation added.`);
+  fetch('https://ai-summary-theta.vercel.app/api/repetition', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      articleId,
+      article,
+    }),
+  });
 };

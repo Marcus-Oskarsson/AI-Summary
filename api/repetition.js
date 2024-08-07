@@ -271,17 +271,10 @@ export default async (req) => {
     return new Response('No payload found.', { status: 400 });
   }
 
-  const { page: pageCreated } = body;
-  const articleId = pageCreated.id;
-
-  console.log(`Article ID: ${articleId}`);
+  const { articleId } = body;
+  const { article } = body;
 
   const omnivore = new Omnivore();
-  const article = await omnivore.getArticle(articleId);
-  new Response(`Article content received:`);
-
-  console.log(`Article content received: ${article}`);
-
   const ai = new AI();
   const articleAnnotation = await ai.getBestCompletionOutOf(
     PROMPT,
@@ -289,7 +282,9 @@ export default async (req) => {
     article,
   );
   new Response(`Article annotation received:`);
-  const response = await omnivore.addAnnotation(articleId, articleAnnotation);
+  const response =
+    '\n##Spaced repetition\n' +
+    (await omnivore.addAnnotation(articleId, articleAnnotation));
   console.log(`Article annotation added: ${response}`);
 
   return new Response(`Article annotation added.`);
