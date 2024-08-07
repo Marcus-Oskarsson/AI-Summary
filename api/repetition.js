@@ -187,8 +187,8 @@ class Omnivore {
     }
   }
 
-  async addAnnotation(articleId, annotation) {
-    const id = uuidv4();
+  async addAnnotation(articleId, annotation, id) {
+    // const id = uuidv4();
     const query = {
       query: this.buildPostQuery(),
       variables: {
@@ -255,6 +255,7 @@ export default async (req) => {
   const { articleId } = body;
   const { article } = body;
   let { articleAnnotation } = body;
+  const { id } = body;
 
   const omnivore = new Omnivore();
   const ai = new AI();
@@ -263,6 +264,7 @@ export default async (req) => {
   const response = await omnivore.addAnnotation(
     articleId,
     'En repetition av artikeln',
+    id
   );
   return new Response(JSON.stringify(response), { status: 200 });
 };

@@ -177,8 +177,7 @@ class Omnivore {
     }
   }
 
-  async addAnnotation(articleId, annotation) {
-    const id = uuidv4();
+  async addAnnotation(articleId, annotation, id) {
     const query = {
       query: this.buildPostQuery(),
       variables: {
@@ -239,6 +238,7 @@ export default async (req, res) => {
 
   const { page: pageCreated } = body;
   const articleId = pageCreated.id;
+  const id = uuidv4();
 
   const omnivore = new Omnivore();
   const article = await omnivore.getArticle(articleId);
@@ -248,7 +248,7 @@ export default async (req, res) => {
 
   const articleAnnotation = 'En summering av artikeln';
 
-  const response = await omnivore.addAnnotation(articleId, articleAnnotation);
+  const response = await omnivore.addAnnotation(articleId, articleAnnotation, id);
   // Starta nästa funktion
   await fetch('https://ai-summary-theta.vercel.app/api/actions', {
     method: 'POST',
@@ -259,6 +259,7 @@ export default async (req, res) => {
       articleId,
       article,
       articleAnnotation: '',
+      id
     }),
   });
   await omnivore.addAnnotation(articleId, "test 2");
