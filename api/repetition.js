@@ -261,11 +261,12 @@ export default async (req) => {
 
   const omnivore = new Omnivore();
   const ai = new AI();
-  // articleAnnotation +=
-  //   '\n##Spaced repetition\n' + (await ai.getCompletion(PROMPT, article));
+  articleAnnotation +=
+    '\n##Spaced repetition\n' + (await ai.getCompletion(PROMPT, article));
+    
   const response = await omnivore.addAnnotation(
     articleId,
-    articleAnnotation + 'En repetition av artikeln',
+    articleAnnotation,
     id
   );
   return new Response(JSON.stringify(response), { status: 200 });

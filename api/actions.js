@@ -245,9 +245,8 @@ export default async (req) => {
 
   const omnivore = new Omnivore();
   const ai = new AI();
-  // articleAnnotation +=
-  //   '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
-  // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
+  articleAnnotation +=
+    '\n##Actions\n' + (await ai.getCompletion(PROMPT, article));
 
   // const response = await omnivore.addAnnotation(
   //   articleId,
@@ -262,7 +261,7 @@ export default async (req) => {
     body: JSON.stringify({
       articleId,
       article,
-      articleAnnotation: articleAnnotation + "\n Actions för artikeln",
+      articleAnnotation,
       id
     }),
   });

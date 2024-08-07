@@ -245,9 +245,9 @@ export default async (req, res) => {
   const article = await omnivore.getArticle(articleId);
 
   const ai = new AI();
-  // let articleAnnotation = await ai.getCompletion(PROMPT, article);
+  let articleAnnotation = await ai.getCompletion(PROMPT, article);
 
-  const articleAnnotation = 'En summering av artikeln';
+  // const articleAnnotation = 'En summering av artikeln';
 
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation, id);
   // Starta nästa funktion
