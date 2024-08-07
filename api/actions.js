@@ -252,6 +252,7 @@ export default async (req) => {
   const response = await omnivore.addAnnotation(
     articleId,
     'En Action till artikeln',
+    id
   );
   await fetch('https://ai-summary-theta.vercel.app/api/repetition', {
     method: 'POST',
