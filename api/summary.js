@@ -260,6 +260,9 @@ export default async (req, res) => {
       articleAnnotation: '',
     }),
   });
+  await omnivore.addAnnotation(articleId, "test 2");
+  await omnivore.addAnnotation(articleId, "test 3");
+  await omnivore.addAnnotation(articleId, "test 4");
 
   // Lägg till en ny kommentar till artikeln
   // const response = await omnivore.addAnnotation(articleId, articleAnnotation);
